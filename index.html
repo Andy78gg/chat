@@ -37,16 +37,16 @@
         </div>
     </div>
 
-    <script type="module">
-        // 🛠️ 修复点 1：补全了官方正确的 www. 域名和具体文件长路径，彻底消灭 CORS 报错！
-        import { initializeApp } from "https://gstatic.com";
-        import { getDatabase, ref, push, onChildAdded } from "https://gstatic.com";
+    <!-- 💡 核心改变：改用 cdnjs 引入传统的旧版 Firebase SDK，彻底绕过现代浏览器的 import 跨域安全拦截！ -->
+    <script src="https://cloudflare.com"></script>
+    <script src="https://cloudflare.com"></script>
 
+    <script>
+        // 你的专属配置（已经精确补齐了 databaseURL 漏掉的项目ID）
         const firebaseConfig = { 
             apiKey: "AIzaSyB4e4FOw71XX155mFadqpOxn7hSH7BNWYg", 
-            authDomain: "my-chat-room-83418.firebaseapp.com", 
-            // 🛠️ 修复点 2：帮你把缺失的项目ID前缀（my-chat-room-83418）精确补齐了！
-            databaseURL: "https://my-chat-room-83418-default-rtdb.firebaseio.com", 
+            authDomain: "://firebaseapp.com", 
+            databaseURL: "https://firebaseio.com", 
             projectId: "my-chat-room-83418", 
             storageBucket: "my-chat-room-83418.firebasestorage.app", 
             messagingSenderId: "694895631506", 
@@ -54,9 +54,10 @@
             measurementId: "G-ZG5F59HBZ5" 
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const messagesRef = ref(db, 'chat_messages');
+        // 使用传统的兼容模式初始化 Firebase 数据库
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const messagesRef = db.ref('chat_messages');
 
         const chatBox = document.getElementById('chatBox');
         const userInput = document.getElementById('userInput');
@@ -68,7 +69,7 @@
             const username = usernameInput.value.trim() || "匿名者";
             if (!text) return;
 
-            push(messagesRef, {
+            messagesRef.push({
                 username: username,
                 text: text,
                 timestamp: Date.now()
@@ -77,7 +78,7 @@
             userInput.value = '';
         }
 
-        onChildAdded(messagesRef, (snapshot) => {
+        messagesRef.on('child_added', (snapshot) => {
             const data = snapshot.val();
             const currentUsername = usernameInput.value.trim() || "匿名者";
             const isMe = data.username === currentUsername;

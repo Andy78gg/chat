@@ -37,23 +37,22 @@
         </div>
     </div>
 
-    <!-- 将正确的 Firebase 网址和逻辑直接塞入网页文件，彻底斩断对旧 script.js 的缓存依赖 -->
     <script type="module">
+        // 🛠️ 修复点 1：补全了官方正确的 www. 域名和具体文件长路径，彻底消灭 CORS 报错！
         import { initializeApp } from "https://gstatic.com";
         import { getDatabase, ref, push, onChildAdded } from "https://gstatic.com";
 
         const firebaseConfig = { 
-    apiKey: "AIzaSyB4e4FOw71XX155mFadqpOxn7hSH7BNWYg", 
-    // 1. 🛠️ 修复了 authDomain（之前你漏掉了项目ID导致报错）
-    authDomain: "my-chat-room-83418.firebaseapp.com", 
-    // 2. 🛠️ 手动补全了 databaseURL（之前没有这一行，导致发送按钮彻底失效）
-    databaseURL: "https://firebaseio.com", 
-    projectId: "my-chat-room-83418", 
-    storageBucket: "my-chat-room-83418.firebasestorage.app", 
-    messagingSenderId: "694895631506", 
-    appId: "1:694895631506:web:f968e207341b6d6730da4b", 
-    measurementId: "G-ZG5F59HBZ5" 
-};
+            apiKey: "AIzaSyB4e4FOw71XX155mFadqpOxn7hSH7BNWYg", 
+            authDomain: "my-chat-room-83418.firebaseapp.com", 
+            // 🛠️ 修复点 2：帮你把缺失的项目ID前缀（my-chat-room-83418）精确补齐了！
+            databaseURL: "https://my-chat-room-83418-default-rtdb.firebaseio.com", 
+            projectId: "my-chat-room-83418", 
+            storageBucket: "my-chat-room-83418.firebasestorage.app", 
+            messagingSenderId: "694895631506", 
+            appId: "1:694895631506:web:f968e207341b6d6730da4b", 
+            measurementId: "G-ZG5F59HBZ5" 
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);

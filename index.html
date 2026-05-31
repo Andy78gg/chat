@@ -43,14 +43,17 @@
         import { getDatabase, ref, push, onChildAdded } from "https://gstatic.com";
 
         const firebaseConfig = { 
-            apiKey: "AIzaSyB4e4FOw71XX155mFadqpOxn7hSH7BNWYg", 
-            authDomain: "://firebaseapp.com", 
-            projectId: "my-chat-room-83418", 
-            storageBucket: "my-chat-room-83418.firebasestorage.app", 
-            messagingSenderId: "694895631506", 
-            appId: "1:694895631506:web:f968e207341b6d6730da4b", 
-            measurementId: "G-ZG5F59HBZ5" 
-        };
+    apiKey: "AIzaSyB4e4FOw71XX155mFadqpOxn7hSH7BNWYg", 
+    // 1. 🛠️ 修复了 authDomain（之前你漏掉了项目ID导致报错）
+    authDomain: "my-chat-room-83418.firebaseapp.com", 
+    // 2. 🛠️ 手动补全了 databaseURL（之前没有这一行，导致发送按钮彻底失效）
+    databaseURL: "https://firebaseio.com", 
+    projectId: "my-chat-room-83418", 
+    storageBucket: "my-chat-room-83418.firebasestorage.app", 
+    messagingSenderId: "694895631506", 
+    appId: "1:694895631506:web:f968e207341b6d6730da4b", 
+    measurementId: "G-ZG5F59HBZ5" 
+};
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);

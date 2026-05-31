@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们的多人联机聊天室</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <span>多人在线聊天室</span>
+            <input type="text" id="usernameInput" placeholder="你的昵称" value="路人甲">
+        </div>
+        <div class="chat-box" id="chatBox">
+            <!-- 实时聊天消息会动态显示在这里 -->
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="输入消息内容...">
+            <button id="sendBtn">发送</button>
+        </div>
+    </div>
+
+    <!-- 使用 type="module" 确保可以使用现代 JavaScript 的 import 功能 -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>

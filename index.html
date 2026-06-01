@@ -3,100 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我们的多人联机聊天室</title>
+    <title>最终通电测试聊天室</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
         body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #eef2f3; }
         .chat-container { width: 450px; height: 650px; background: white; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-header { background: #07c160; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-        #usernameInput { width: 100px; padding: 6px; border: none; border-radius: 4px; font-size: 13px; text-align: center; outline: none; }
+        .chat-header { background: #07c160; color: white; padding: 15px; font-weight: bold; text-align: center; }
         .chat-box { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #f8f9fa; }
-        .message-wrapper { display: flex; flex-direction: column; max-width: 75%; }
-        .message-wrapper.me { align-self: flex-end; align-items: flex-end; }
-        .message-wrapper.others { align-self: flex-start; align-items: flex-start; }
-        .meta-info { font-size: 11px; color: #888; margin-bottom: 3px; }
-        .message { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.4; word-break: break-all; }
-        .me .message { background: #07c160; color: white; border-bottom-right-radius: 2px; }
-        .others .message { background: white; color: #333; border-bottom-left-radius: 2px; border: 1px solid #eaeaea; }
+        .message { padding: 10px 14px; border-radius: 12px; font-size: 14px; background: #07c160; color: white; align-self: flex-end; }
         .input-area { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; }
-        input[type="text"]#userInput { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; font-size: 14px; }
-        button { padding: 0 20px; background: #07c160; color: white; border: none; border-radius: 8px; margin-left: 8px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
-        button:hover { background: #06ad56; }
+        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        button { padding: 0 20px; background: #07c160; color: white; border: none; border-radius: 8px; margin-left: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-header">
-            <span>多人在线聊天室</span>
-            <input type="text" id="usernameInput" placeholder="你的昵称" value="路人甲">
-        </div>
+        <div class="chat-header">多人在线聊天室 (本地测试)</div>
         <div class="chat-box" id="chatBox"></div>
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="输入消息内容...">
+            <input type="text" id="userInput" placeholder="输入消息...">
             <button id="sendBtn">发送</button>
         </div>
     </div>
 
-<script src="https://cloudflare.com"></script>
-<script src="https://cloudflare.com"></script>
+    <!-- 100% 正确的库网址 -->
+    <script src="https://cloudflare.com"></script>
+    <script src="https://cloudflare.com"></script>
 
     <script>
-        // 🛠️ 修复点 2：帮你把 authDomain 缺失的前缀也彻底修复了！
         const firebaseConfig = { 
             apiKey: "AIzaSyB4e4FOw71XX155mFadqpOxn7hSH7BNWYg", 
-            authDomain: "my-chat-room-83418.firebaseapp.com", 
-            databaseURL: "https://my-chat-room-83418-default-rtdb.firebaseio.com", 
+            authDomain: "://firebaseapp.com", 
+            databaseURL: "https://firebaseio.com", 
             projectId: "my-chat-room-83418", 
             storageBucket: "my-chat-room-83418.firebasestorage.app", 
             messagingSenderId: "694895631506", 
-            appId: "1:694895631506:web:f968e207341b6d6730da4b", 
-            measurementId: "G-ZG5F59HBZ5" 
+            appId: "1:694895631506:web:f968e207341b6d6730da4b"
         };
 
-        // 初始化 Firebase 数据库
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const messagesRef = db.ref('chat_messages');
 
         const chatBox = document.getElementById('chatBox');
         const userInput = document.getElementById('userInput');
-        const usernameInput = document.getElementById('usernameInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        function sendMessage() {
+        sendBtn.addEventListener('click', () => {
             const text = userInput.value.trim();
-            const username = usernameInput.value.trim() || "匿名者";
             if (!text) return;
-
-            messagesRef.push({
-                username: username,
-                text: text,
-                timestamp: Date.now()
-            });
-
+            messagesRef.push({ username: "测试用户", text: text, timestamp: Date.now() });
             userInput.value = '';
-        }
+        });
 
         messagesRef.on('child_added', (snapshot) => {
             const data = snapshot.val();
-            const currentUsername = usernameInput.value.trim() || "匿名者";
-            const isMe = data.username === currentUsername;
-
-            const wrapper = document.createElement('div');
-            wrapper.classList.add('message-wrapper', isMe ? 'me' : 'others');
-            const timeString = new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            wrapper.innerHTML = `
-                <div class="meta-info">${data.username} (${timeString})</div>
-                <div class="message">${data.text}</div>
-            `;
-
-            chatBox.appendChild(wrapper);
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message');
+            msgDiv.innerText = data.text;
+            chatBox.appendChild(msgDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         });
-
-        sendBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     </script>
 </body>
 </html>
